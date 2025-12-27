@@ -215,4 +215,11 @@ public class Client {
         Type chatType = new TypeToken<Chat>() {}.getType();
         return Optional.of(GsonProvider.getGson(this).fromJson(json, chatType));
     }
+
+    public void sendMessage(String chatId, String message) {
+        String result = (String) page.evaluate(
+                "async (args) => await window.W4J.sendMessage(args.chatId, args.content)",
+                Map.of("chatId", chatId, "content", message));
+        System.out.println(result);
+    }
 }
