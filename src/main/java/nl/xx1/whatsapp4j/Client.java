@@ -26,6 +26,8 @@ public class Client {
     private String currentIndexHtml = "";
 
     private BrowserContext browserContext;
+
+    @Getter
     private Page page;
 
     @Getter

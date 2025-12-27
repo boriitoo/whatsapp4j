@@ -92,4 +92,14 @@ public class Message {
 
         this.client.sendMessage(getChatId(), content, options);
     }
+
+    public void delete(boolean everyone, boolean clearMedia) {
+        if (this.client == null) {
+            return;
+        }
+
+        this.client.getPage().evaluate("async (args) => await window.W4J.deleteMessage(args.id, args.everyone, args.clearMedia)",
+            Map.of("id", this.id, "everyone", everyone, "clearMedia", clearMedia)
+        );
+    }
 }
