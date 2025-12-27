@@ -5,8 +5,10 @@ import nl.xx1.whatsapp4j.model.Message;
 
 public class Main {
     public static void main(String[] args) {
-        Client client = new Client(
-                ClientLaunchOptions.builder().authStrategy(new LocalAuth()).build());
+        Client client = new Client(ClientLaunchOptions.builder()
+                .headless(true)
+                .authStrategy(new LocalAuth())
+                .build());
 
         client.on(Event.QR_READY, System.out::println);
 
@@ -17,7 +19,7 @@ public class Main {
         client.on(Event.MESSAGE_RECEIVED, (Message message) -> {
             System.out.println(message);
             if (message.getBody().equalsIgnoreCase("!ping")) {
-                client.sendMessage(message.getFrom(), "Pong!");
+                message.reply("Pong!");
             }
         });
 

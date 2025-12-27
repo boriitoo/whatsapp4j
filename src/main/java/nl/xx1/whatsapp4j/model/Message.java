@@ -1,14 +1,13 @@
 package nl.xx1.whatsapp4j.model;
 
 import com.google.gson.annotations.Expose;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import nl.xx1.whatsapp4j.Client;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
