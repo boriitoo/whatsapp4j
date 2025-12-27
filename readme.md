@@ -1,5 +1,7 @@
 # whatsapp4j
 
+**This library is not affiliated with Whatsapp LLC in any way.**
+
 **whatsapp4j** is an open-source project with the goal of porting the core features and API of [whatsapp-web.js](https://github.com/pedroslopez/whatsapp-web.js/) from JavaScript to Java.
 
 ## Project Goal
