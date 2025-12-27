@@ -19,7 +19,7 @@ public class Main {
         client.on(Event.MESSAGE_RECEIVED, (Message message) -> {
             System.out.println(message);
             if (message.getBody().equalsIgnoreCase("!ping")) {
-                message.reply("Pong!");
+                message.delete(true, true);
             }
         });
 

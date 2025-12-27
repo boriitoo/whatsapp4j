@@ -175,4 +175,18 @@
         const newMessage = window.Store.Msg.get(newMsgKey._serialized);
         return newMessage ? window.W4J.getMessageModel(newMessage) : undefined;
     }
+
+    window.W4J.deleteMessage = async (msgId, everyone = false, clearMedia = false) => {
+        const msg = window.Store.Msg.get(msgId) || (await window.Store.Msg.getMessagesById([msgId]))?.messages?.[0];
+        const chat = window.Store.Chat.get(msg.id.remote) || (await window.Store.Chat.find(msg.id.remote));
+
+        const canRevoke =
+            window.Store.MsgActionChecks.canSenderRevokeMsg(msg) || window.Store.MsgActionChecks.canAdminRevokeMsg(msg);
+
+        if (everyone && canRevoke) {
+            window.Store.Cmd.sendRevokeMsgs(chat, { list: [msg], type: 'message' }, { clearMedia: clearMedia })
+        }
+
+        window.Store.Cmd.sendDeleteMsgs(chat, { list: [msg], type: 'message' }, clearMedia)
+    }
 })
