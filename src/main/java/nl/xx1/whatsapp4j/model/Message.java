@@ -1,6 +1,8 @@
 package nl.xx1.whatsapp4j.model;
 
 import com.google.gson.annotations.Expose;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,6 +43,9 @@ public class Message {
     private String from;
 
     @Expose
+    private String to;
+
+    @Expose
     private boolean fromMe;
 
     @Expose
@@ -68,4 +73,23 @@ public class Message {
     private MessageType type;
 
     protected final Client client;
+
+    private String getChatId() {
+        if (isFromMe()) {
+            return to;
+        }
+
+        return from;
+    }
+
+    public void reply(String content) {
+        if (this.client == null) {
+            return;
+        }
+
+        Map<String, Object> options = new HashMap<>();
+        options.put("quotedMessageId", this.id);
+
+        this.client.sendMessage(getChatId(), content, options);
+    }
 }

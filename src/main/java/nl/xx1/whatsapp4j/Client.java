@@ -65,7 +65,9 @@ public class Client {
         options.authStrategy().setup(this);
 
         if (options.authStrategy() instanceof NoAuth) {
-            Browser browser = Playwright.create().chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+            Browser browser = Playwright.create()
+                    .chromium()
+                    .launch(new BrowserType.LaunchOptions().setHeadless(options.headless()));
             browserContext = browser.newContext();
         } else {
             Path userDataDir = options.authStrategy().beforeBrowser();
@@ -75,7 +77,7 @@ public class Client {
                             userDataDir,
                             new BrowserType.LaunchPersistentContextOptions()
                                     .setBypassCSP(true)
-                                    .setHeadless(false));
+                                    .setHeadless(options.headless()));
         }
 
         page = browserContext.newPage();
@@ -93,7 +95,7 @@ public class Client {
         });
 
         while (true) {
-            this.page.waitForTimeout(1);
+            this.page.waitForTimeout(1000);
         }
     }
 
@@ -217,8 +219,12 @@ public class Client {
     }
 
     public void sendMessage(String chatId, String message) {
+        sendMessage(chatId, message, Map.of());
+    }
+
+    public void sendMessage(String chatId, String message, Map<String, Object> options) {
         page.evaluate(
-                "async (args) => await window.W4J.sendMessage(args.chatId, args.content)",
-                Map.of("chatId", chatId, "content", message));
+                "async (args) => await window.W4J.sendMessage(args.chatId, args.content, args.options)",
+                Map.of("chatId", chatId, "content", message, "options", options));
     }
 }

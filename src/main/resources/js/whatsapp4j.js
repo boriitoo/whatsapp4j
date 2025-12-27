@@ -103,15 +103,35 @@
      *
      * @param chatId
      * @param content
+     * @param options
      * @returns {Promise<void>}
      */
-    window.W4J.sendMessage = async (chatId, content) => {
-        console.log(`Sending message for ${chatId} with content: ${content}`);
+    window.W4J.sendMessage = async (chatId, content, options = {}) => {
+        console.log(`Sending message for ${chatId} with options: ${JSON.stringify(options)}`);
         const chat = await window.W4J.getChat(chatId, false);
 
         if (!chat) {
             console.log("Chat is null. Returning early.")
             return null;
+        }
+
+        let quotedMessageOptions = {};
+
+        if (options.quotedMessageId) {
+            let quotedMessage = window.Store.Msg.get(options.quotedMessageId);
+
+            if (quotedMessage) {
+                const canReply = window.Store.ReplyUtils
+                    ? window.Store.ReplyUtils.canReplyMsg(quotedMessage.unsafe())
+                    : quotedMessage.canReply();
+
+                if (canReply) {
+                    quotedMessageOptions = quotedMessage.msgContextInfo(chat);
+                }
+            }
+
+            delete options.ignoreQuoteErrors;
+            delete options.quotedMessageId;
         }
 
         const lidUser = window.Store.User.getMaybeMeLidUser();
@@ -143,7 +163,8 @@
             self: 'out',
             t: Number(new Date().getTime() / 1000),
             isNewMsg: true,
-            type: 'chat'
+            type: 'chat',
+            ...quotedMessageOptions
         }
 
         await window.Store.SendMessage.addAndSendMsgToChat(chat, message);
