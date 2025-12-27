@@ -109,23 +109,15 @@
         console.log(`Sending message for ${chatId} with content: ${content}`);
         const chat = await window.W4J.getChat(chatId, false);
 
-        console.log(chat);
-
         if (!chat) {
             console.log("Chat is null. Returning early.")
             return null;
         }
 
         const lidUser = window.Store.User.getMaybeMeLidUser();
-        console.log(`LIDUSer: ${lidUser}`);
-        const meUser = window.Store.User.getMaybeMeUser();
-        console.log(`MEUser: ${meUser}`);
+        const meUser = window.Store.User.getMaybeMePnUser();
         const newId = await window.Store.MsgKey.newId();
-        console.log(`NewId: ${newId}`);
-
-
         let from = chat.id.isLid() ? lidUser : meUser;
-
         let participant;
 
         if (chat.isGroup) {
@@ -141,13 +133,11 @@
             selfDir: 'out',
         });
 
-        console.log(`New message key: ${newMsgKey}`);
-
         const message = {
             id: newMsgKey,
             ack: 0,
             body: content,
-            from: meUser,
+            from: from,
             to: chat.id,
             local: true,
             self: 'out',
@@ -161,7 +151,7 @@
             chatId: chat.id
         });
 
-        const newMessage =  window.Store.Msg.get(newMsgKey._serialized);
+        const newMessage = window.Store.Msg.get(newMsgKey._serialized);
         return newMessage ? window.W4J.getMessageModel(newMessage) : undefined;
     }
 })

@@ -12,11 +12,12 @@ public class Main {
 
         client.on(Event.READY, (obj) -> {
             System.out.println("Client is ready!");
-            client.getChats().forEach(System.out::println);
         });
 
         client.on(Event.MESSAGE_RECEIVED, (Message message) -> {
-            System.out.println(message);
+            if (message.getBody().equalsIgnoreCase("!ping")) {
+                client.sendMessage(message.getFrom(), "Pong!");
+            }
         });
 
         client.start();
