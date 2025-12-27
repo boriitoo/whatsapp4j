@@ -15,6 +15,7 @@ public class Main {
         });
 
         client.on(Event.MESSAGE_RECEIVED, (Message message) -> {
+            System.out.println(message);
             if (message.getBody().equalsIgnoreCase("!ping")) {
                 client.sendMessage(message.getFrom(), "Pong!");
             }

@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import nl.xx1.whatsapp4j.Client;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
 @ToString
@@ -41,6 +44,9 @@ public class Message {
     private String from;
 
     @Expose
+    private String to;
+
+    @Expose
     private boolean fromMe;
 
     @Expose
@@ -68,4 +74,23 @@ public class Message {
     private MessageType type;
 
     protected final Client client;
+
+    private String getChatId() {
+        if (isFromMe()) {
+            return to;
+        }
+
+        return from;
+    }
+
+    public void reply(String content) {
+        if (this.client == null) {
+            return;
+        }
+
+        Map<String, Object> options = new HashMap<>();
+        options.put("quotedMessageId", this.id);
+
+        this.client.sendMessage(getChatId(), content, options);
+    }
 }

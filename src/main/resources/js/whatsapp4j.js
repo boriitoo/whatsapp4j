@@ -91,7 +91,7 @@
 
         delete msg.pendingAckUpdate;
 
-        // console.log(msg);
+        console.log(msg);
 
         return JSON.stringify(msg);
     }

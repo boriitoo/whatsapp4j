@@ -217,6 +217,10 @@ public class Client {
     }
 
     public void sendMessage(String chatId, String message) {
+        sendMessage(chatId, message, Map.of());
+    }
+
+    public void sendMessage(String chatId, String message, Map<String, Object> options) {
         page.evaluate(
                 "async (args) => await window.W4J.sendMessage(args.chatId, args.content)",
                 Map.of("chatId", chatId, "content", message));
